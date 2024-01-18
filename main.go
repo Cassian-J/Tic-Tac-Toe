@@ -37,12 +37,14 @@ func Server() {
 		log.Fatal(err)
 	}
 	for {
+		reader := bufio.NewReader(os.Stdin)
 		message, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
 			log.Fatal(err)
 		}
 		fmt.Print("Message Received:", string(message))
-		newmessage := strings.ToUpper(message)
+		fmt.Print("Text to send: ")
+		newmessage, _ := reader.ReadString('\n')
 		conn.Write([]byte(newmessage + "\n"))
 	}
 }
