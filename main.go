@@ -44,12 +44,12 @@ func Server(position string) {
 		message = strings.TrimSpace(message)
 		fmt.Println(message)
 		place, _ := strconv.Atoi(message)
-		position = TicTacToe(place, position)
+		position = TicTacToe(place, position, conn)
 		fmt.Print("Text to send: ")
 		newmessage, _ := reader.ReadString('\n')
 		newmessage = strings.TrimSpace(newmessage)
 		place, _ = strconv.Atoi(newmessage)
-		position = TicTacToe(place, position)
+		position = TicTacToe(place, position, conn)
 		conn.Write([]byte(newmessage + "\n"))
 	}
 }
@@ -66,34 +66,45 @@ func Client(position string) {
 		text, _ := reader.ReadString('\n')
 		text = strings.TrimSpace(text)
 		place, _ := strconv.Atoi(text)
-		position = TicTacToe(place, position)
+		position = TicTacToe(place, position, conn)
 		fmt.Fprintf(conn, text+"\n")
 		message, _ := bufio.NewReader(conn).ReadString('\n')
 		message = strings.TrimSpace(message)
 		fmt.Println(message)
 		place, _ = strconv.Atoi(message)
-		position = TicTacToe(place, position)
+		position = TicTacToe(place, position, conn)
 	}
 }
 
-func TicTacToe(place int, position string) string {
+func TicTacToe(place int, position string, conn net.Conn) string {
 	player := 0
 	positionList := strings.Split(position, ",")
 	fmt.Println(place)
-	for i := range positionList {
-		if positionList[i] == " " {
-			player++
+	if positionList[place-1] == " " {
+		for i := range positionList {
+			if positionList[i] == " " {
+				player++
+			}
 		}
-	}
-	if player%2 == 0 {
-		positionList[place-1] = "X"
+		if player%2 == 0 {
+			positionList[place-1] = "X"
+		} else {
+			positionList[place-1] = "O"
+		}
+		fmt.Println("|" + positionList[6] + "|" + positionList[7] + "|" + positionList[8] + "|")
+		fmt.Println("|" + positionList[3] + "|" + positionList[4] + "|" + positionList[5] + "|")
+		fmt.Println("|" + positionList[0] + "|" + positionList[1] + "|" + positionList[2] + "|")
+		position = strings.Join(positionList, ",")
+		fmt.Println(position)
 	} else {
-		positionList[place-1] = "O"
+		fmt.Println("cette position est deja prise")
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Print("Text to send: ")
+		text, _ := reader.ReadString('\n')
+		text = strings.TrimSpace(text)
+		place, _ := strconv.Atoi(text)
+		position = TicTacToe(place, position, conn)
+		fmt.Fprintf(conn, text+"\n")
 	}
-	fmt.Println("|" + positionList[6] + "|" + positionList[7] + "|" + positionList[8] + "|")
-	fmt.Println("|" + positionList[3] + "|" + positionList[4] + "|" + positionList[5] + "|")
-	fmt.Println("|" + positionList[0] + "|" + positionList[1] + "|" + positionList[2] + "|")
-	position = strings.Join(positionList, ",")
-	fmt.Println(position)
 	return position
 }
