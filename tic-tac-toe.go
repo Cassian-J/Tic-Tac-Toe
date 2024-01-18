@@ -1,14 +1,17 @@
 package main
 
-import "fmt"
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+)
+
 func currentplayer() {
 	var currentPlayer string = "X"
-if currentPlayer == "X" {
-	currentPlayer = "O"
-} else {
-	currentPlayer = "X"
-}
+	if currentPlayer == "X" {
+		currentPlayer = "O"
+	} else {
+		currentPlayer = "X"
+	}
 
 }
 func main() {
@@ -81,8 +84,3 @@ func main() {
 	}
 
 }
-
-
-
-
-
