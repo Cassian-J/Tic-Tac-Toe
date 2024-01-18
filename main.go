@@ -49,8 +49,8 @@ func Server() {
 	}
 }
 
-func Client() {	
-	adresseip := os.Args[1]+":8000"
+func Client() {
+	adresseip := os.Args[1] + ":8000"
 	conn, err := net.Dial("tcp", adresseip)
 	if err != nil {
 		log.Fatal(err)
@@ -61,6 +61,6 @@ func Client() {
 		text, _ := reader.ReadString('\n')
 		fmt.Fprintf(conn, text+"\n")
 		message, _ := bufio.NewReader(conn).ReadString('\n')
-		fmt.Print("Message from server: " + message+'\n')
+		fmt.Print("Message from server: " + message + "\n")
 	}
 }
