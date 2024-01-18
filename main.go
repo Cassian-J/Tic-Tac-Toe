@@ -41,7 +41,6 @@ func Server() {
 			fmt.Println(err)
 			continue
 		}
-
 		// Handle the connection in a new goroutine
 		go HandleConnection(conn)
 	}
@@ -62,6 +61,8 @@ func HandleConnection(conn net.Conn) {
 	// Print the incoming data
 	fmt.Printf("Received: %s", buf)
 }
+
+
 func Client() {
 	fmt.Println("client lancé")
 	// Connect to the server
@@ -78,6 +79,5 @@ func Client() {
 		return
 	}
 
-	// Close the connection
-	conn.Close()
+	
 }
