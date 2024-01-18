@@ -27,11 +27,11 @@ func main() {
 }
 
 func Server() {
-	ln, err := net.Listen("tcp", ":7680")
+	ln, err := net.Listen("tcp", ":8000")
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Listening on port 7680")
+	fmt.Println("Listening on port 8000")
 	conn, err := ln.Accept()
 	if err != nil {
 		log.Fatal(err)
@@ -50,7 +50,7 @@ func Server() {
 }
 
 func Client() {	
-	adresseip := os.Args[1]+":7680"
+	adresseip := os.Args[1]+":8000"
 	conn, err := net.Dial("tcp", adresseip)
 	if err != nil {
 		log.Fatal(err)
@@ -61,6 +61,6 @@ func Client() {
 		text, _ := reader.ReadString('\n')
 		fmt.Fprintf(conn, text+"\n")
 		message, _ := bufio.NewReader(conn).ReadString('\n')
-		fmt.Print("Message from server: " + message)
+		fmt.Print("Message from server: " + message+'\n')
 	}
 }
