@@ -95,5 +95,76 @@ func TicTacToe(place int, position string) string {
 	fmt.Println("|" + positionList[0] + "|" + positionList[1] + "|" + positionList[2] + "|")
 	position = strings.Join(positionList, ",")
 	fmt.Println(position)
+	etat := win(position)
+	if etat == "server" {
+		fmt.Println("server win")
+		os.Exit(0)
+	} else if etat == "client" {
+		fmt.Println("client win")
+		os.Exit(0)
+	}
 	return position
+}
+
+
+func win(position string) string {
+	positionList := strings.Split(position, ",")
+	if positionList[0] == positionList[1] && positionList[1] == positionList[2] && positionList[0]!= " "{
+		if positionList[0] == "X"{
+			return "server"
+		} else {
+			return "client"
+		}
+	}
+	if positionList[3] == positionList[4] && positionList[4] == positionList[5] && positionList[3]!= " "{
+		if positionList[3] == "X"{
+			return "server"
+		} else {
+			return "client"
+		}
+	}
+	if positionList[6] == positionList[7] && positionList[7] == positionList[8] && positionList[6]!= " "{
+		if positionList[6] == "X"{
+			return "server"
+		} else {
+			return "client"
+		}
+	}
+	if positionList[0] == positionList[3] && positionList[3] == positionList[6] && positionList[0]!= " "{
+		if positionList[0] == "X"{
+			return "server"
+		} else {
+			return "client"
+		}
+	}
+	if positionList[1] == positionList[4] && positionList[4] == positionList[7] && positionList[1]!= " "{
+		if positionList[1] == "X"{
+			return "server"
+		} else {
+			return "client"
+		}
+	}
+	if positionList[2] == positionList[5] && positionList[5] == positionList[8] && positionList[2]!= " "{
+		if positionList[2] == "X"{
+			return "server"
+		} else {
+			return "client"
+		}
+	}
+	if positionList[0] == positionList[4] && positionList[4] == positionList[8] && positionList[0]!= " "{
+		if positionList[0] == "X"{
+			return "server"
+		} else {
+			return "client"
+		}
+	}
+	if positionList[2] == positionList[4] && positionList[4] == positionList[6] && positionList[2]!= " "{
+		if positionList[2] == "X"{
+			return "server"
+		} else {
+			return "client"
+		}
+	}
+	return "none"
+
 }
