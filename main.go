@@ -27,11 +27,11 @@ func main() {
 }
 
 func Server() {
-	ln, err := net.Listen("tcp", ":8000")
+	ln, err := net.Listen("tcp", ":7680")
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Listening on port 8000")
+	fmt.Println("Listening on port 7680")
 	conn, err := ln.Accept()
 	if err != nil {
 		log.Fatal(err)
@@ -49,8 +49,9 @@ func Server() {
 	}
 }
 
-func Client() {
-	conn, err := net.Dial("tcp", "localhost:8000")
+func Client() {	
+	adresseip := os.Args[1]+":7680"
+	conn, err := net.Dial("tcp", adresseip)
 	if err != nil {
 		log.Fatal(err)
 	}
