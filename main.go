@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"net"
 	"os"
 	"strings"
@@ -26,68 +27,37 @@ func main() {
 }
 
 func Server() {
-	fmt.Println("serveur lancé")
-	// Listen for incoming connections
-	listener, err := net.Listen("tcp", "localhost:8080")
+	ln, err := net.Listen("tcp", ":8000")
 	if err != nil {
-		fmt.Println("Error:", err)
-		return
+		log.Fatal(err)
 	}
-	defer listener.Close()
-
-	fmt.Println("Server is listening on port 8080")
-
-	for {
-		// Accept incoming connections
-		conn, err := listener.Accept()
-		if err != nil {
-			fmt.Println("Error:", err)
-			continue
-		}
-
-		// Handle client connection in a goroutine
-		go HandleClient(conn)
+	fmt.Println("Listening on port 8000")
+	conn, err := ln.Accept()
+	if err != nil {
+		log.Fatal(err)
 	}
-}
-
-func HandleClient(conn net.Conn) {
-	defer conn.Close()
-
-	// Create a buffer to read data into
-	buffer := make([]byte, 1024)
-
 	for {
-		// Read data from the client
-		n, err := conn.Read(buffer)
+		message, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
-			fmt.Println("Error:", err)
-			return
+			log.Fatal(err)
 		}
-
-		// Process and use the data (here, we'll just print it)
-		fmt.Printf("Received: %s\n", buffer[:n])
+		fmt.Print("Message Received:", string(message))
+		newmessage := strings.ToUpper(message)
+		conn.Write([]byte(newmessage + "\n"))
 	}
 }
 
 func Client() {
-	// Connect to the server
-	conn, err := net.Dial("tcp", "localhost:8080")
+	conn, err := net.Dial("tcp", "localhost:8000")
 	if err != nil {
-		fmt.Println("Error:", err)
-		return
+		log.Fatal(err)
 	}
-	defer conn.Close()
-	// Send data to the server
-	data := []byte("Hello, Server!\n")
 	for {
-		readMessage := bufio.NewReader(os.Stdin)
-		option, _ := readMessage.ReadString('\n')
-		option = strings.TrimSpace(option)
-		data = []byte(option)
-		_, err = conn.Write(data)
-		if err != nil {
-			fmt.Println("Error:", err)
-			return
-		}
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Print("Text to send: ")
+		text, _ := reader.ReadString('\n')
+		fmt.Fprintf(conn, text+"\n")
+		message, _ := bufio.NewReader(conn).ReadString('\n')
+		fmt.Print("Message from server: " + message)
 	}
 }
