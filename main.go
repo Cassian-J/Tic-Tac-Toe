@@ -96,7 +96,10 @@ func TicTacToe(place int, position string) string {
 	position = strings.Join(positionList, ",")
 	fmt.Println(position)
 	etat := win(position)
-	if etat == "server" {
+	if etat == "egalite" {
+		fmt.Println("egalite")
+		os.Exit(0)
+	} else if etat == "server" {
 		fmt.Println("server win")
 		os.Exit(0)
 	} else if etat == "client" {
@@ -109,6 +112,9 @@ func TicTacToe(place int, position string) string {
 
 func win(position string) string {
 	positionList := strings.Split(position, ",")
+	if positionList[0]!= " " && positionList[1]!= " " && positionList[2]!= " " && positionList[3]!= " " && positionList[4]!= " " && positionList[5]!= " " && positionList[6]!= " " && positionList[7]!= " " && positionList[8]!= " "{
+		return "egalite"
+	}
 	if positionList[0] == positionList[1] && positionList[1] == positionList[2] && positionList[0]!= " "{
 		if positionList[0] == "X"{
 			return "server"
