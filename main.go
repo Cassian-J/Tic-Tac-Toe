@@ -27,57 +27,67 @@ func main() {
 
 func Server() {
 	fmt.Println("serveur lancé")
-	// Listen for incoming connections on port 8080
-	ln, err := net.Listen("tcp", ":8080")
+	// Listen for incoming connections
+	listener, err := net.Listen("tcp", "localhost:8080")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Error:", err)
 		return
 	}
+	defer listener.Close()
 
-	// Accept incoming connections and handle them
+	fmt.Println("Server is listening on port 8080")
+
 	for {
-		conn, err := ln.Accept()
+		// Accept incoming connections
+		conn, err := listener.Accept()
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("Error:", err)
 			continue
 		}
-		// Handle the connection in a new goroutine
-		go HandleConnection(conn)
+
+		// Handle client connection in a goroutine
+		go HandleClient(conn)
 	}
 }
 
-func HandleConnection(conn net.Conn) {
-	// Close the connection when we're done
+func HandleClient(conn net.Conn) {
 	defer conn.Close()
 
-	// Read incoming data
-	buf := make([]byte, 1024)
-	_, err := conn.Read(buf)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	// Create a buffer to read data into
+	buffer := make([]byte, 1024)
 
-	// Print the incoming data
-	fmt.Printf("Received: %s", buf)
+	for {
+		// Read data from the client
+		n, err := conn.Read(buffer)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+
+		// Process and use the data (here, we'll just print it)
+		fmt.Printf("Received: %s\n", buffer[:n])
+	}
 }
 
-
 func Client() {
-	fmt.Println("client lancé")
 	// Connect to the server
 	conn, err := net.Dial("tcp", "localhost:8080")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Error:", err)
 		return
 	}
-
-	// Send some data to the server
-	_, err = conn.Write([]byte("Hello, server!"))
-	if err != nil {
-		fmt.Println(err)
-		return
+	defer conn.Close()
+	// Send data to the server
+	data := []byte("Hello, Server!\n")
+	for {
+		readMessage := bufio.NewReader(os.Stdin)
+		option, _ := readMessage.ReadString('\n')
+		option = strings.TrimSpace(option)
+		data = []byte(option)
+		_, err = conn.Write(data)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
 	}
-
-	
 }
