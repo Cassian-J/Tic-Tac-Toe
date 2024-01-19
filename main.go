@@ -97,14 +97,13 @@ func TicTacToe(place int, position string, conn net.Conn) string {
 		position = strings.Join(positionList, ",")
 		fmt.Println(position)
 	} else {
-		fmt.Println("cette position est deja prise")
-		reader := bufio.NewReader(os.Stdin)
-		fmt.Print("Text to send: ")
-		text, _ := reader.ReadString('\n')
-		text = strings.TrimSpace(text)
-		place, _ := strconv.Atoi(text)
-		position = TicTacToe(place, position, conn)
-		fmt.Fprintf(conn, text+"\n")
+		if player%2 == 0 {
+			fmt.Println("case deja prise")
+			Client(position)
+		} else {
+			fmt.Println("case deja prise")
+			Server(position)
+		}
 	}
 	etat := win(position)
 	if etat == "egalite" {
