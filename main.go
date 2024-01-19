@@ -13,12 +13,15 @@ import (
 func main() {
 	spaces := strings.Repeat(" ", 50)
 	spaces2 := strings.Repeat(" ", 35)
+	bleu := "\033[34m"
+	vert := "\033[32m"
+	reset := "\033[0m"
 	position := " , , , , , , , , "
 	var etat string
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		fmt.Print("\033[H\033[2J")
-		fmt.Println(spaces,"                    ||                 ",spaces)
+		fmt.Println(spaces,vert+"                    ||                 ",spaces)
 		fmt.Println(spaces,"                    ||                 ",spaces)
 		fmt.Println(spaces,"-------------------Menu--------------------",spaces)
 		fmt.Println(spaces,"|                                         |",spaces)
@@ -27,15 +30,15 @@ func main() {
 		fmt.Println(spaces,"|   [1] Serveur                           |",spaces)
 		fmt.Println(spaces,"|   [2] Client                            |",spaces)
 		fmt.Println(spaces,"|                                         |",spaces)
-		fmt.Println(spaces,"-------------------------------------------",spaces)
+		fmt.Println(spaces,"-------------------------------------------",spaces+reset)
 		fmt.Println()
 		fmt.Println()
-		fmt.Println(spaces2,"████████╗██╗ ██████╗    ████████╗ █████╗  ██████╗    ████████╗ ██████╗ ███████╗")
+		fmt.Println(spaces2, bleu+"████████╗██╗ ██████╗    ████████╗ █████╗  ██████╗    ████████╗ ██████╗ ███████╗")
 		fmt.Println(spaces2,"╚══██╔══╝██║██╔════╝    ╚══██╔══╝██╔══██╗██╔════╝    ╚══██╔══╝██╔═══██╗██╔════╝")
 		fmt.Println(spaces2,"   ██║   ██║██║            ██║   ███████║██║            ██║   ██║   ██║█████╗  ")
 		fmt.Println(spaces2,"   ██║   ██║██║            ██║   ██╔══██║██║            ██║   ██║   ██║██╔══╝  ")
 		fmt.Println(spaces2,"   ██║   ██║╚██████╗       ██║   ██║  ██║╚██████╗       ██║   ╚██████╔╝███████╗")
-		fmt.Println(spaces2,"   ╚═╝   ╚═╝ ╚═════╝       ╚═╝   ╚═╝  ╚═╝ ╚═════╝       ╚═╝    ╚═════╝ ╚══════╝")
+		fmt.Println(spaces2,"   ╚═╝   ╚═╝ ╚═════╝       ╚═╝   ╚═╝  ╚═╝ ╚═════╝       ╚═╝    ╚═════╝ ╚══════╝"+reset)
 		
 		option, _ := reader.ReadString('\n')
 		option = strings.TrimSpace(option)
