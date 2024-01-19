@@ -195,66 +195,46 @@ func TicTacToe(place int, position string, conn net.Conn) (string, string) {
 
 func win(position string) string {
 	positionList := strings.Split(position, ",")
-	// We check if there is a winner or an equality
-	if positionList[0] != " " && positionList[1] != " " && positionList[2] != " " && positionList[3] != " " && positionList[4] != " " && positionList[5] != " " && positionList[6] != " " && positionList[7] != " " && positionList[8] != " " {
-		return "egalite"
-	}
-	if positionList[0] == positionList[1] && positionList[1] == positionList[2] && positionList[0] != " " {
-		if positionList[0] == "X" {
-			return "server"
-		} else {
-			return "client"
+	for i := 0; i < 3; i++ {
+		if positionList[i] == positionList[i+1] && positionList[i+1] == positionList[i+2] && positionList[i] != " " {
+			if positionList[0] == "X" {
+				return "server"
+			} else {
+				return "client"
+			}
 		}
-	}
-	if positionList[3] == positionList[4] && positionList[4] == positionList[5] && positionList[3] != " " {
-		if positionList[3] == "X" {
-			return "server"
-		} else {
-			return "client"
+		if positionList[i] == positionList[i+3] && positionList[i+3] == positionList[i+6] && positionList[i] != " " {
+			if positionList[0] == "X" {
+				return "server"
+			} else {
+				return "client"
+			}
 		}
+
 	}
-	if positionList[6] == positionList[7] && positionList[7] == positionList[8] && positionList[6] != " " {
-		if positionList[6] == "X" {
-			return "server"
-		} else {
-			return "client"
-		}
-	}
-	if positionList[0] == positionList[3] && positionList[3] == positionList[6] && positionList[0] != " " {
-		if positionList[0] == "X" {
-			return "server"
-		} else {
-			return "client"
-		}
-	}
-	if positionList[1] == positionList[4] && positionList[4] == positionList[7] && positionList[1] != " " {
-		if positionList[1] == "X" {
-			return "server"
-		} else {
-			return "client"
-		}
-	}
-	if positionList[2] == positionList[5] && positionList[5] == positionList[8] && positionList[2] != " " {
+	if positionList[1] == positionList[5] && positionList[5] == positionList[9] && positionList[1] != " " {
 		if positionList[2] == "X" {
 			return "server"
 		} else {
 			return "client"
 		}
 	}
-	if positionList[0] == positionList[4] && positionList[4] == positionList[8] && positionList[0] != " " {
-		if positionList[0] == "X" {
+	if positionList[3] == positionList[5] && positionList[5] == positionList[7] && positionList[3] != " " {
+		if positionList[2] == "X" {
 			return "server"
 		} else {
 			return "client"
 		}
 	}
-	if positionList[2] == positionList[4] && positionList[4] == positionList[6] && positionList[2] != " " {
-		if positionList[2] == "X" {
-			return "server"
-		} else {
-			return "client"
+	cont := 0
+	for i := 0; i < 9; i++ {
+		cont++
+		if positionList[i] == " " {
+			break
+		}
+		if cont == 9 {
+			return "egalite"
 		}
 	}
 	return "none"
-
 }
