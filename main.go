@@ -58,7 +58,7 @@ func Server(position string, etat string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Listening on port 8000")
+	fmt.Println("Le client se connecte⌛")
 	conn, err := ln.Accept()
 	if err != nil {
 		log.Fatal(err)
@@ -92,6 +92,7 @@ func Client(position string, etat string) {
 	adresseip := os.Args[1] + ":8000"
 	conn, err := net.Dial("tcp", adresseip)
 	positionList := strings.Split(position, ",")
+	fmt.Println("Les positions correspndent au placement des numéros du clavier numérique")
 	fmt.Println("|" + positionList[6] + "|" + positionList[7] + "|" + positionList[8] + "|")
 	fmt.Println("|" + positionList[3] + "|" + positionList[4] + "|" + positionList[5] + "|")
 	fmt.Println("|" + positionList[0] + "|" + positionList[1] + "|" + positionList[2] + "|")
@@ -160,6 +161,7 @@ func TicTacToe(place int, position string, conn net.Conn) (string, string) {
 	}
 	fmt.Print("\033[H\033[2J")
 	fmt.Print("\033[H\033[2J")
+	fmt.Println("Les positions correspndent au placement des numéros du clavier numérique")
 	fmt.Println("|" + positionList[6] + "|" + positionList[7] + "|" + positionList[8] + "|")
 	fmt.Println("|" + positionList[3] + "|" + positionList[4] + "|" + positionList[5] + "|")
 	fmt.Println("|" + positionList[0] + "|" + positionList[1] + "|" + positionList[2] + "|")
