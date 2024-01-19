@@ -12,6 +12,7 @@ import (
 
 func main() {
 	position := " , , , , , , , , "
+	var etat string
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		fmt.Println("Voulez vous etre client ou serveur?")
@@ -21,14 +22,16 @@ func main() {
 		option = strings.TrimSpace(option)
 		switch option {
 		case "1":
-			Server(position)
+			fmt.Print("\033[H\033[2J")
+			Server(position, etat)
 		case "2":
-			Client(position)
+			fmt.Print("\033[H\033[2J")
+			Client(position, etat)
 		}
 	}
 }
 
-func Server(position string) {
+func Server(position string, etat string) {
 	ln, err := net.Listen("tcp", ":8000")
 	if err != nil {
 		log.Fatal(err)
@@ -39,24 +42,37 @@ func Server(position string) {
 		log.Fatal(err)
 	}
 	for {
-		reader := bufio.NewReader(os.Stdin)
 		message, _ := bufio.NewReader(conn).ReadString('\n')
-		message = strings.TrimSpace(message)
-		fmt.Println(message)
-		place, _ := strconv.Atoi(message)
-		position = TicTacToe(place, position, conn)
+		place, _ := strconv.Atoi(strings.TrimSpace(message))
+		position, etat = TicTacToe(place, position, conn)
+		move := moves(position)
+		if etat != "none" {
+			os.Exit(0)
+			break
+		}
+		reader := bufio.NewReader(os.Stdin)
 		fmt.Print("Text to send: ")
 		newmessage, _ := reader.ReadString('\n')
-		newmessage = strings.TrimSpace(newmessage)
-		place, _ = strconv.Atoi(newmessage)
-		position = TicTacToe(place, position, conn)
+		place, _ = strconv.Atoi(strings.TrimSpace(newmessage))
+		move = moves(position)
+		for !Play(move, place) {
+			reader := bufio.NewReader(os.Stdin)
+			fmt.Print("Text to send: ")
+			newmessage, _ = reader.ReadString('\n')
+			place, _ = strconv.Atoi(strings.TrimSpace(newmessage))
+		}
+		position, etat = TicTacToe(place, position, conn)
 		conn.Write([]byte(newmessage + "\n"))
 	}
 }
 
-func Client(position string) {
+func Client(position string, etat string) {
 	adresseip := os.Args[1] + ":8000"
 	conn, err := net.Dial("tcp", adresseip)
+	positionList := strings.Split(position, ",")
+	fmt.Println("|" + positionList[6] + "|" + positionList[7] + "|" + positionList[8] + "|")
+	fmt.Println("|" + positionList[3] + "|" + positionList[4] + "|" + positionList[5] + "|")
+	fmt.Println("|" + positionList[0] + "|" + positionList[1] + "|" + positionList[2] + "|")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -64,59 +80,78 @@ func Client(position string) {
 		reader := bufio.NewReader(os.Stdin)
 		fmt.Print("Text to send: ")
 		text, _ := reader.ReadString('\n')
-		text = strings.TrimSpace(text)
-		place, _ := strconv.Atoi(text)
-		position = TicTacToe(place, position, conn)
+		place, _ := strconv.Atoi(strings.TrimSpace(text))
+		move := moves(position)
+		for !Play(move, place) {
+			reader := bufio.NewReader(os.Stdin)
+			fmt.Print("Text to send: ")
+			text, _ = reader.ReadString('\n')
+			place, _ = strconv.Atoi(strings.TrimSpace(text))
+		}
+		position, etat = TicTacToe(place, position, conn)
 		fmt.Fprintf(conn, text+"\n")
+
 		message, _ := bufio.NewReader(conn).ReadString('\n')
-		message = strings.TrimSpace(message)
-		fmt.Println(message)
-		place, _ = strconv.Atoi(message)
-		position = TicTacToe(place, position, conn)
+		place, _ = strconv.Atoi(strings.TrimSpace(message))
+		position, etat = TicTacToe(place, position, conn)
+		move = moves(position)
+		if etat != "none" {
+			os.Exit(0)
+			break
+		}
 	}
 }
 
-func TicTacToe(place int, position string, conn net.Conn) string {
+func Play(move []string, place int) bool {
+	for i := range move {
+		if move[i] == strconv.Itoa(place) {
+			return true
+		}
+	}
+	return false
+}
+
+func moves(position string) []string {
+	var moveList []string
+	positionList := strings.Split(position, ",")
+	for i := range positionList {
+		if positionList[i] == " " {
+			moveList = append(moveList, strconv.Itoa(i+1))
+		}
+	}
+	return moveList
+}
+
+func TicTacToe(place int, position string, conn net.Conn) (string, string) {
 	player := 0
 	positionList := strings.Split(position, ",")
 	fmt.Println(place)
-	if positionList[place-1] == " " {
-		for i := range positionList {
-			if positionList[i] == " " {
-				player++
-			}
-		}
-		if player%2 == 0 {
-			positionList[place-1] = "X"
-		} else {
-			positionList[place-1] = "O"
-		}
-		fmt.Println("|" + positionList[6] + "|" + positionList[7] + "|" + positionList[8] + "|")
-		fmt.Println("|" + positionList[3] + "|" + positionList[4] + "|" + positionList[5] + "|")
-		fmt.Println("|" + positionList[0] + "|" + positionList[1] + "|" + positionList[2] + "|")
-		position = strings.Join(positionList, ",")
-		fmt.Println(position)
-	} else {
-		if player%2 == 0 {
-			fmt.Println("case deja prise")
-			Client(position)
-		} else {
-			fmt.Println("case deja prise")
-			Server(position)
+	for i := range positionList {
+		if positionList[i] == " " {
+			player++
 		}
 	}
+	if player%2 == 0 && place != 0 {
+		positionList[place-1] = "X"
+	} else if place != 0 {
+		positionList[place-1] = "O"
+	}
+	fmt.Print("\033[H\033[2J")
+	fmt.Print("\033[H\033[2J")
+	fmt.Println("|" + positionList[6] + "|" + positionList[7] + "|" + positionList[8] + "|")
+	fmt.Println("|" + positionList[3] + "|" + positionList[4] + "|" + positionList[5] + "|")
+	fmt.Println("|" + positionList[0] + "|" + positionList[1] + "|" + positionList[2] + "|")
+	position = strings.Join(positionList, ",")
+	fmt.Println(position)
 	etat := win(position)
 	if etat == "egalite" {
 		fmt.Println("egalite")
-		os.Exit(0)
 	} else if etat == "server" {
 		fmt.Println("server win")
-		os.Exit(0)
 	} else if etat == "client" {
 		fmt.Println("client win")
-		os.Exit(0)
 	}
-	return position
+	return position, etat
 }
 
 func win(position string) string {
