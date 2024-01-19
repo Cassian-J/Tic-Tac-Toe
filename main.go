@@ -196,14 +196,14 @@ func TicTacToe(place int, position string, conn net.Conn) (string, string) {
 func win(position string) string {
 	positionList := strings.Split(position, ",")
 	for i := 0; i < 3; i++ {
-		if positionList[i] == positionList[i+1] && positionList[i+1] == positionList[i+2] && positionList[i] != " " {
+		if positionList[i] == positionList[i+1] && positionList[i+1] == positionList[i+2] && positionList[i] != " " { // We check if ther is a winner on the lines
 			if positionList[0] == "X" {
 				return "server"
 			} else {
 				return "client"
 			}
 		}
-		if positionList[i] == positionList[i+3] && positionList[i+3] == positionList[i+6] && positionList[i] != " " {
+		if positionList[i] == positionList[i+3] && positionList[i+3] == positionList[i+6] && positionList[i] != " " { // We check if ther is a winner on the columns
 			if positionList[0] == "X" {
 				return "server"
 			} else {
@@ -212,14 +212,14 @@ func win(position string) string {
 		}
 
 	}
-	if positionList[1] == positionList[5] && positionList[5] == positionList[9] && positionList[1] != " " {
+	if positionList[1] == positionList[5] && positionList[5] == positionList[9] && positionList[1] != " " { // We check if ther is a winner on the diagonals
 		if positionList[2] == "X" {
 			return "server"
 		} else {
 			return "client"
 		}
 	}
-	if positionList[3] == positionList[5] && positionList[5] == positionList[7] && positionList[3] != " " {
+	if positionList[3] == positionList[5] && positionList[5] == positionList[7] && positionList[3] != " " { // We check if ther is a winner on the diagonals
 		if positionList[2] == "X" {
 			return "server"
 		} else {
@@ -232,7 +232,7 @@ func win(position string) string {
 		if positionList[i] == " " {
 			break
 		}
-		if cont == 9 {
+		if cont == 9 { // We check if ther is an equality
 			return "egalite"
 		}
 	}
