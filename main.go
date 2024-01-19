@@ -51,7 +51,10 @@ func main() {
 		case "2":
 			//If we are the client , we run the client function
 			fmt.Print("\033[H\033[2J")
-			Client(position, etat)
+			fmt.Print("Entrez l'adresse ip du serveur: ")
+			ip, _ := reader.ReadString('\n')
+			ip = strings.TrimSpace(ip)
+			Client(position, etat, ip)
 		}
 	}
 }
@@ -92,8 +95,8 @@ func Server(position string, etat string) { // Server function
 	}
 }
 
-func Client(position string, etat string) {
-	adresseip := os.Args[1] + ":8000" // We get the ip address of the server
+func Client(position string, etat string, ip string) { // Client function
+	adresseip := ip+":8000" // We get the ip address of the server
 	conn, err := net.Dial("tcp", adresseip)
 	positionList := strings.Split(position, ",")
 	fmt.Println("Les positions correspndent au placement des numéros du clavier numérique") // We display the game board
@@ -173,7 +176,6 @@ func TicTacToe(place int, position string, conn net.Conn) (string, string) {
 	fmt.Println("|" + positionList[3] + "|" + positionList[4] + "|" + positionList[5] + "|")
 	fmt.Println("|" + positionList[0] + "|" + positionList[1] + "|" + positionList[2] + "|")
 	position = strings.Join(positionList, ",")
-	fmt.Println(position)
 	etat := win(position) // We check if the game is over
 	if etat == "egalite" { //If there is an equality , we display it
 		fmt.Println("egalite")
