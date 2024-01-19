@@ -69,7 +69,13 @@ func Server(position string, etat string) { // Server function
 	if err != nil {
 		log.Fatal(err)
 	}
+	positionList := strings.Split(position, ",")
+	fmt.Println("Les positions correspndent au placement des numéros du clavier numérique") // We display the game board
+	fmt.Println("|" + positionList[6] + "|" + positionList[7] + "|" + positionList[8] + "|")
+	fmt.Println("|" + positionList[3] + "|" + positionList[4] + "|" + positionList[5] + "|")
+	fmt.Println("|" + positionList[0] + "|" + positionList[1] + "|" + positionList[2] + "|")
 	for {
+		fmt.Println("l'adversaire joue")
 		message, _ := bufio.NewReader(conn).ReadString('\n') // Read the message
 		place, _ := strconv.Atoi(strings.TrimSpace(message))
 		position, etat = TicTacToe(place, position, conn)
@@ -79,7 +85,7 @@ func Server(position string, etat string) { // Server function
 			break
 		}
 		reader := bufio.NewReader(os.Stdin) // We ask the server to play
-		fmt.Print("Text to send: ")
+		fmt.Print("A vous de jouer:")
 		newmessage, _ := reader.ReadString('\n')
 		place, _ = strconv.Atoi(strings.TrimSpace(newmessage))
 		move = moves(position)
@@ -108,7 +114,7 @@ func Client(position string, etat string, ip string) { // Client function
 	}
 	for {
 		reader := bufio.NewReader(os.Stdin)
-		fmt.Print("Text to send: ") // We ask the client to play
+		fmt.Print("A vous de jouer:") // We ask the client to play
 		text, _ := reader.ReadString('\n')
 		place, _ := strconv.Atoi(strings.TrimSpace(text))
 		move := moves(position)
