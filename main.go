@@ -21,32 +21,34 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		fmt.Print("\033[H\033[2J")
-		fmt.Println(spaces,vert+"                    ||                 ",spaces)
-		fmt.Println(spaces,"                    ||                 ",spaces)
-		fmt.Println(spaces,"-------------------Menu--------------------",spaces)
-		fmt.Println(spaces,"|                                         |",spaces)
-		fmt.Println(spaces,"|   Voulez vous etre client ou serveur?   |",spaces)
-		fmt.Println(spaces,"|                                         |",spaces)
-		fmt.Println(spaces,"|   [1] Serveur                           |",spaces)
-		fmt.Println(spaces,"|   [2] Client                            |",spaces)
-		fmt.Println(spaces,"|                                         |",spaces)
-		fmt.Println(spaces,"-------------------------------------------",spaces+reset)
+		fmt.Println(spaces, vert+"                    ||                 ", spaces)
+		fmt.Println(spaces, "                    ||                 ", spaces)
+		fmt.Println(spaces, "-------------------Menu--------------------", spaces)
+		fmt.Println(spaces, "|                                         |", spaces)
+		fmt.Println(spaces, "|   Voulez vous etre client ou serveur?   |", spaces)
+		fmt.Println(spaces, "|                                         |", spaces)
+		fmt.Println(spaces, "|   [1] Serveur                           |", spaces)
+		fmt.Println(spaces, "|   [2] Client                            |", spaces)
+		fmt.Println(spaces, "|                                         |", spaces)
+		fmt.Println(spaces, "-------------------------------------------", spaces+reset)
 		fmt.Println()
 		fmt.Println()
 		fmt.Println(spaces2, bleu+"████████╗██╗ ██████╗    ████████╗ █████╗  ██████╗    ████████╗ ██████╗ ███████╗")
-		fmt.Println(spaces2,"╚══██╔══╝██║██╔════╝    ╚══██╔══╝██╔══██╗██╔════╝    ╚══██╔══╝██╔═══██╗██╔════╝")
-		fmt.Println(spaces2,"   ██║   ██║██║            ██║   ███████║██║            ██║   ██║   ██║█████╗  ")
-		fmt.Println(spaces2,"   ██║   ██║██║            ██║   ██╔══██║██║            ██║   ██║   ██║██╔══╝  ")
-		fmt.Println(spaces2,"   ██║   ██║╚██████╗       ██║   ██║  ██║╚██████╗       ██║   ╚██████╔╝███████╗")
-		fmt.Println(spaces2,"   ╚═╝   ╚═╝ ╚═════╝       ╚═╝   ╚═╝  ╚═╝ ╚═════╝       ╚═╝    ╚═════╝ ╚══════╝"+reset)
-		
+		fmt.Println(spaces2, "╚══██╔══╝██║██╔════╝    ╚══██╔══╝██╔══██╗██╔════╝    ╚══██╔══╝██╔═══██╗██╔════╝")
+		fmt.Println(spaces2, "   ██║   ██║██║            ██║   ███████║██║            ██║   ██║   ██║█████╗  ")
+		fmt.Println(spaces2, "   ██║   ██║██║            ██║   ██╔══██║██║            ██║   ██║   ██║██╔══╝  ")
+		fmt.Println(spaces2, "   ██║   ██║╚██████╗       ██║   ██║  ██║╚██████╗       ██║   ╚██████╔╝███████╗")
+		fmt.Println(spaces2, "   ╚═╝   ╚═╝ ╚═════╝       ╚═╝   ╚═╝  ╚═╝ ╚═════╝       ╚═╝    ╚═════╝ ╚══════╝"+reset)
+
 		option, _ := reader.ReadString('\n')
 		option = strings.TrimSpace(option)
 		switch option {
 		case "1":
 			fmt.Print("\033[H\033[2J")
+			fmt.Print("\033[H\033[2J")
 			Server(position, etat)
 		case "2":
+			fmt.Print("\033[H\033[2J")
 			fmt.Print("\033[H\033[2J")
 			Client(position, etat)
 		}
@@ -63,23 +65,36 @@ func Server(position string, etat string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	positionList := strings.Split(position, ",")
+	fmt.Print("\033[H\033[2J")
+	fmt.Print("Le jeu peut commencer!")
+	fmt.Println("Les positions correspndent au placement des numéros du clavier numérique")
+	fmt.Println("|" + positionList[6] + "|" + positionList[7] + "|" + positionList[8] + "|")
+	fmt.Println("|" + positionList[3] + "|" + positionList[4] + "|" + positionList[5] + "|")
+	fmt.Println("|" + positionList[0] + "|" + positionList[1] + "|" + positionList[2] + "|")
 	for {
+		fmt.Println("l'adversaire joue")
 		message, _ := bufio.NewReader(conn).ReadString('\n')
 		place, _ := strconv.Atoi(strings.TrimSpace(message))
 		position, etat = TicTacToe(place, position, conn)
 		move := moves(position)
 		if etat != "none" {
+			if etat != "server" {
+				fmt.Println("Game Over")
+			}
 			os.Exit(0)
 			break
 		}
 		reader := bufio.NewReader(os.Stdin)
-		fmt.Print("Text to send: ")
+		fmt.Println("A vous de jouer!")
+		fmt.Print("Où voulez vous jouer: ")
 		newmessage, _ := reader.ReadString('\n')
 		place, _ = strconv.Atoi(strings.TrimSpace(newmessage))
 		move = moves(position)
 		for !Play(move, place) {
 			reader := bufio.NewReader(os.Stdin)
-			fmt.Print("Text to send: ")
+			fmt.Println("Cette position est deja prise!")
+			fmt.Print("Choisissez une autre position: ")
 			newmessage, _ = reader.ReadString('\n')
 			place, _ = strconv.Atoi(strings.TrimSpace(newmessage))
 		}
@@ -101,24 +116,31 @@ func Client(position string, etat string) {
 	}
 	for {
 		reader := bufio.NewReader(os.Stdin)
-		fmt.Print("Text to send: ")
+		fmt.Println("A vous de jouer!")
+		fmt.Print("Où voulez vous jouer: ")
 		text, _ := reader.ReadString('\n')
 		place, _ := strconv.Atoi(strings.TrimSpace(text))
 		move := moves(position)
 		for !Play(move, place) {
 			reader := bufio.NewReader(os.Stdin)
-			fmt.Print("Text to send: ")
+			fmt.Print("\033[H\033[2J")
+			fmt.Println("Cette position est deja prise!")
+			fmt.Print("Choisissez une autre position: ")
 			text, _ = reader.ReadString('\n')
 			place, _ = strconv.Atoi(strings.TrimSpace(text))
 		}
 		position, etat = TicTacToe(place, position, conn)
 		fmt.Fprintf(conn, text+"\n")
 
+		fmt.Println("l'adversaire joue")
 		message, _ := bufio.NewReader(conn).ReadString('\n')
 		place, _ = strconv.Atoi(strings.TrimSpace(message))
 		position, etat = TicTacToe(place, position, conn)
 		move = moves(position)
 		if etat != "none" {
+			if etat != "client" {
+				fmt.Println("Game Over")
+			}
 			os.Exit(0)
 			break
 		}
@@ -166,7 +188,6 @@ func TicTacToe(place int, position string, conn net.Conn) (string, string) {
 	fmt.Println("|" + positionList[3] + "|" + positionList[4] + "|" + positionList[5] + "|")
 	fmt.Println("|" + positionList[0] + "|" + positionList[1] + "|" + positionList[2] + "|")
 	position = strings.Join(positionList, ",")
-	fmt.Println(position)
 	etat := win(position)
 	if etat == "egalite" {
 		fmt.Println("egalite")
