@@ -11,13 +11,32 @@ import (
 )
 
 func main() {
+	spaces := strings.Repeat(" ", 50)
+	spaces2 := strings.Repeat(" ", 35)
 	position := " , , , , , , , , "
 	var etat string
 	reader := bufio.NewReader(os.Stdin)
 	for {
-		fmt.Println("Voulez vous etre client ou serveur?")
-		fmt.Println("1 serveur")
-		fmt.Println("2 client")
+		fmt.Print("\033[H\033[2J")
+		fmt.Println(spaces,"                    ||                 ",spaces)
+		fmt.Println(spaces,"                    ||                 ",spaces)
+		fmt.Println(spaces,"-------------------Menu--------------------",spaces)
+		fmt.Println(spaces,"|                                         |",spaces)
+		fmt.Println(spaces,"|   Voulez vous etre client ou serveur?   |",spaces)
+		fmt.Println(spaces,"|                                         |",spaces)
+		fmt.Println(spaces,"|   [1] Serveur                           |",spaces)
+		fmt.Println(spaces,"|   [2] Client                            |",spaces)
+		fmt.Println(spaces,"|                                         |",spaces)
+		fmt.Println(spaces,"-------------------------------------------",spaces)
+		fmt.Println()
+		fmt.Println()
+		fmt.Println(spaces2,"████████╗██╗ ██████╗    ████████╗ █████╗  ██████╗    ████████╗ ██████╗ ███████╗")
+		fmt.Println(spaces2,"╚══██╔══╝██║██╔════╝    ╚══██╔══╝██╔══██╗██╔════╝    ╚══██╔══╝██╔═══██╗██╔════╝")
+		fmt.Println(spaces2,"   ██║   ██║██║            ██║   ███████║██║            ██║   ██║   ██║█████╗  ")
+		fmt.Println(spaces2,"   ██║   ██║██║            ██║   ██╔══██║██║            ██║   ██║   ██║██╔══╝  ")
+		fmt.Println(spaces2,"   ██║   ██║╚██████╗       ██║   ██║  ██║╚██████╗       ██║   ╚██████╔╝███████╗")
+		fmt.Println(spaces2,"   ╚═╝   ╚═╝ ╚═════╝       ╚═╝   ╚═╝  ╚═╝ ╚═════╝       ╚═╝    ╚═════╝ ╚══════╝")
+		
 		option, _ := reader.ReadString('\n')
 		option = strings.TrimSpace(option)
 		switch option {
